@@ -16,5 +16,5 @@ chmod +x setup.sh
 ## For Windows users:
 Run the batch setup script:
 ```bash
-setup.bat
+.\setup.bat
 ```
