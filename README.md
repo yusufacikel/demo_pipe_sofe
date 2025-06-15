@@ -9,7 +9,7 @@ Change directory:
 ```bash
 cd demo_pipe_sofe
 ```
-## For Linux/macOS users:
+## For Linux users:
 Make the setup script executable and run it:
 ```bash
 chmod +x setup.sh
