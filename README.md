@@ -1,4 +1,6 @@
 # Project Setup
+Requires Python version 3.9, 3.10, 3.11, or 3.12.
+
 Clone the repository:
 ```bash
 git clone https://github.com/yusufacikel/demo_pipe_sofe.git
