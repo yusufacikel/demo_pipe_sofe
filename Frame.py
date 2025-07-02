@@ -9,6 +9,43 @@ from utils import fit_circle_to_depth_image
 from Circles import Circle
 
 
+
+
+class FeatureExtractor:
+    def __init__(self, frame):
+        self.frame = frame
+
+    def extract_orb(self):
+        orb = cv2.ORB.create()
+        mask = np.ones(self.frame.gray.shape, dtype=np.uint8) * 255
+        keypoints, descriptors = orb.detectAndCompute(self.frame.gray, mask)
+        return {
+            "type": "orb",
+            "features": list(zip(keypoints, descriptors)),
+            "frame": self.frame,
+        }
+    
+    def extract_sift(self):
+        sift = cv2.SIFT.create()
+        mask = np.ones(self.frame.gray.shape, dtype=np.uint8) * 255
+        keypoints, descriptors = sift.detectAndCompute(self.frame.gray, mask)
+        return {
+            "type": "sift",
+            "features": list(zip(keypoints, descriptors)),
+            "frame": self.frame,
+        }
+    
+def visualize_features(feature_dict, frame):
+    features = feature_dict["features"]
+    img_with_features = cv2.drawKeypoints(
+        frame.color,
+        [kp for kp, _ in features],
+        frame.color.copy(),
+        (0, 255, 0),
+        cv2.DRAW_MATCHES_FLAGS_DEFAULT
+    )
+    return img_with_features
+
 @dataclass
 class Frame:
     depth_path: Path
@@ -20,6 +57,10 @@ class Frame:
         self.gray: np.ndarray = cv2.cvtColor(cv2.imread(str(self.color_path)), cv2.COLOR_BGR2GRAY)
         self.color: np.ndarray = cv2.cvtColor(cv2.imread(str(self.color_path)), cv2.COLOR_BGR2RGB)
         self.depth: np.ndarray = cv2.imread(str(self.depth_path), cv2.IMREAD_ANYDEPTH)
+        
+        feature_extractor = FeatureExtractor(self)
+        self.orb = feature_extractor.extract_orb()
+        self.sift = feature_extractor.extract_sift()
 
         self.raw_pixels: 'PixelList' = self.extract_pixels()
         self.fg_circles, self.bg_circles = self.extract_circles()

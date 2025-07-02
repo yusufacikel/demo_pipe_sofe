@@ -19,3 +19,4 @@ weasyprint
 jinja2
 pymongo
 torch
+opencv-contrib-python
